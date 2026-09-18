@@ -5,8 +5,11 @@
   "private": true,
   "scripts": {
     "start": "bun run src/index.ts",
+    "start:tor": "bun run src/index.ts --tor",
     "dev": "bun --watch src/index.ts",
     "ping": "bun run src/index.ts --ping",
+    "ping:tor": "bun run src/index.ts --tor --ping",
+    "tor:check": "bun run src/tor.ts",
     "proxy:mock": "bun run src/mock-proxy.ts",
     "test:e2e": "bun run src/test-e2e.ts",
     "typecheck": "tsc --noEmit"
