@@ -1,0 +1,26 @@
+{
+  "name": "minecraft-socks5-client",
+  "module": "src/index.ts",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "start": "bun run src/index.ts",
+    "dev": "bun --watch src/index.ts",
+    "ping": "bun run src/index.ts --ping",
+    "proxy:mock": "bun run src/mock-proxy.ts",
+    "test:e2e": "bun run src/test-e2e.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/node": "^26.6.1"
+  },
+  "peerDependencies": {
+    "typescript": "^7"
+  },
+  "dependencies": {
+    "minecraft-protocol": "^1.68.0",
+    "socks": "^2.8.10",
+    "socks-proxy-agent": "^10.1.0"
+  }
+}
