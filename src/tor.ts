@@ -147,20 +147,32 @@ export function requestNewTorIdentity(controlPort = 9051, password = '', host = 
   });
 }
 
-// Executável direto para teste: bun run src/tor.ts
+// Executável direto para teste ou renovação de IP: bun run src/tor.ts [--renew]
 if (import.meta.main) {
   (async () => {
+    const isRenew = process.argv.includes('--renew') || process.argv.includes('renew');
     console.log('🧅 [Tor] Detectando serviços Tor locais...');
     const detected = await detectTorPort();
 
     if (!detected) {
       console.error('\n❌ Nenhum serviço Tor detectado nas portas 9050 (Tor Service) ou 9150 (Tor Browser)!');
-      console.log('Dica: Inicie o Tor Browser ou execute o serviço Tor em background e tente novamente.\n');
+      console.log('Dica: Inicie o Tor com "bun run tor:start" e tente novamente.\n');
       process.exit(1);
     }
 
-    console.log(`✅ Serviço Tor ativo encontrado na porta SOCKS5: ${detected}`);
-    console.log('🔍 Consultando https://check.torproject.org/api/ip através do Tor...');
+    if (isRenew) {
+      console.log('🔄 Solicitando novo circuito e novo IP para a rede Tor (NEWNYM)...');
+      try {
+        await requestNewTorIdentity(9051);
+        console.log('✅ Novo circuito Tor solicitado com sucesso!');
+        await new Promise((r) => setTimeout(r, 2000));
+      } catch (err: any) {
+        console.warn(`⚠️ Aviso ao renovar circuito (ControlPort 9051): ${err.message}`);
+      }
+    }
+
+    console.log(`✅ Serviço Tor ativo na porta SOCKS5: ${detected}`);
+    console.log('🔍 Consultando nó de saída em https://check.torproject.org/api/ip...');
 
     try {
       const status = await checkTorStatus(detected);

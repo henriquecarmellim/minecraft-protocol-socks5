@@ -32,17 +32,26 @@ async function main() {
     }
   }
 
-  // Se o modo Tor estiver ativado, detecta a porta ativa (9050 ou 9150)
+  // Se o modo Tor estiver ativado, detecta a porta ativa (9050 ou 9150) ou inicia automaticamente
   if (config.proxy.isTor) {
-    const detectedPort = await detectTorPort(config.proxy.port);
+    let detectedPort = await detectTorPort(config.proxy.port);
     if (!detectedPort) {
-      console.error(`❌ [Erro Tor] Nenhum serviço Tor detectado em 127.0.0.1 (portas 9050 ou 9150).`);
-      console.log(`👉 Para iniciar a rede Tor automaticamente, execute:`);
-      console.log(`   bun run tor:start\n`);
+      console.log(`🧅 [Tor] Serviço Tor não está ativo. Iniciando automaticamente em segundo plano...`);
+      const proc = Bun.spawn(['bun', 'run', 'src/tor-service.ts', 'start'], {
+        stdout: 'inherit',
+        stderr: 'inherit',
+      });
+      await proc.exited;
+      detectedPort = await detectTorPort(config.proxy.port);
+    }
+
+    if (detectedPort) {
+      config.proxy.port = detectedPort;
+      console.log(`🧅 [Tor] Conectado e operando na porta SOCKS5: ${detectedPort}`);
+    } else {
+      console.error(`❌ [Erro Tor] Não foi possível iniciar o serviço Tor automaticamente.`);
       process.exit(1);
     }
-    config.proxy.port = detectedPort;
-    console.log(`🧅 Serviço Tor detectado e conectado na porta SOCKS5: ${detectedPort}`);
   }
 
   // Se o usuário passou --ping na linha de comando, apenas faz o ping via SOCKS5
@@ -118,9 +127,30 @@ async function main() {
       console.log('\n📖 Comandos do Console:');
       console.log('  /login <senha>       - Envia comando de login');
       console.log('  /register <senha>    - Envia comando de registro');
+      console.log('  /newip               - Solicita novo circuito/IP na rede Tor');
       console.log('  /quit                - Desconecta o bot e encerra');
       console.log('  <qualquer texto>     - Envia como mensagem normal no chat do jogo\n');
       rl?.prompt();
+      return;
+    }
+
+    if (input === '/newip' || input === '/renew') {
+      console.log('\n🔄 Solicitando novo circuito Tor (NEWNYM)...');
+      import('./tor.ts').then(({ requestNewTorIdentity, checkTorStatus }) => {
+        requestNewTorIdentity(9051)
+          .then(async () => {
+            console.log('✅ Circuito renovado!');
+            try {
+              const status = await checkTorStatus(config.proxy.port);
+              console.log(`🌐 Novo IP Tor: ${status.ip}\n`);
+            } catch {}
+            rl?.prompt();
+          })
+          .catch((err) => {
+            console.warn(`⚠️ Não foi possível renovar circuito: ${err.message}\n`);
+            rl?.prompt();
+          });
+      });
       return;
     }
 
