@@ -9,6 +9,8 @@
     "dev": "bun --watch src/index.ts",
     "ping": "bun run src/index.ts --ping",
     "ping:tor": "bun run src/index.ts --tor --ping",
+    "tor:start": "bun run src/tor-service.ts start",
+    "tor:stop": "bun run src/tor-service.ts stop",
     "tor:check": "bun run src/tor.ts",
     "proxy:mock": "bun run src/mock-proxy.ts",
     "test:e2e": "bun run src/test-e2e.ts",

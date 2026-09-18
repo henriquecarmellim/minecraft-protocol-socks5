@@ -89,21 +89,19 @@ A rede Tor expõe nativamente uma interface proxy SOCKS5 local:
 
 ### Passo a passo para usar com o Tor:
 
-1. **Inicie o Tor**:
-   - Abra o **Tor Browser** no computador (deixe-o aberto em segundo plano), **OU**
-   - Instale e execute o Tor no Windows pelo PowerShell:
-     ```powershell
-     winget install TorProject.Tor
-     tor
-     ```
+1. **Iniciar o Tor** (O Tor já está instalado no seu sistema):
+   ```bash
+   bun run tor:start
+   ```
+   *(Inicia o serviço Tor em segundo plano na porta 9050)*
 
-2. **Verifique se o Tor está ativo e veja o seu IP de saída**:
+2. **Verificar se o Tor está ativo e ver o seu IP de saída**:
    ```bash
    bun run tor:check
    ```
-   *Retornará se a conexão é autêntica e qual é o IP do nó de saída Tor.*
+   *Retornará a confirmação da rede Tor e o IP público do nó de saída.*
 
-3. **Conecte o bot de Minecraft através da Rede Tor**:
+3. **Conectar o bot de Minecraft através da Rede Tor**:
    ```bash
    bun run start:tor
    ```
@@ -112,6 +110,11 @@ A rede Tor expõe nativamente uma interface proxy SOCKS5 local:
 4. **Pinguar um servidor via Tor**:
    ```bash
    bun run ping:tor
+   ```
+
+5. **Encerrar o serviço Tor**:
+   ```bash
+   bun run tor:stop
    ```
 
 > [!NOTE]
