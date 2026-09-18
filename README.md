@@ -1,4 +1,4 @@
-# 🚀 Minecraft SOCKS5 Client (Bun + TypeScript + minecraft-protocol)
+# 🚀 minecraft-protocol-socks5 (Bun + TypeScript)
 
 Projeto de cliente/bot para Minecraft desenvolvido em **TypeScript** utilizando o runtime ultrarrápido **Bun (bun.sh)** e a biblioteca **`minecraft-protocol`**, configurado para tunelar toda a conexão TCP (e opcionalmente as requisições HTTP de autenticação da Microsoft) através de um servidor **Proxy SOCKS5**.
 
@@ -18,7 +18,7 @@ Projeto de cliente/bot para Minecraft desenvolvido em **TypeScript** utilizando 
 ## 🏗️ Arquitetura do Projeto
 
 ```
-Miner/
+minecraft-protocol-socks5/
 ├── .env                  # Configurações ativas de Proxy e Servidor MC
 ├── .env.example          # Modelo documentado de variáveis de ambiente
 ├── bunfig.toml           # Configurações do Bun (compatibilidade Windows/OneDrive)

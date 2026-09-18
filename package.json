@@ -1,5 +1,5 @@
 {
-  "name": "minecraft-socks5-client",
+  "name": "minecraft-protocol-socks5",
   "module": "src/index.ts",
   "type": "module",
   "private": true,
